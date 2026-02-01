@@ -1,15 +1,22 @@
-server:
-  port: ${SERVER_PORT}
+# ─────────────────────────────────────────────────────────
+# eureka-server/src/main/resources/application.yml
+#
+# Bootstrap-only file.  The only things it needs to know are:
+#   1. Its own service name (must match the filename prefix
+#      in the remote config repo)
+#   2. Where the Config Server is running
+#   3. Which profile to activate
+#
+# Everything else (port, self-preservation, logging) is
+# fetched from the remote config repo via Config Server.
+# ─────────────────────────────────────────────────────────
 
 spring:
   application:
-    name: service-discovery
+    name: eureka-server            # must match config-repo filenames: eureka-server*.yml
 
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
-    endpoint:
-      health:
-        show-details: always
+  config:
+    import: optional:configserver:http://localhost:8888 # Connect to Config Server address
+
+  profiles:
+    active: dev                    # override at startup: --spring.profiles.active=prod
